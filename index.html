@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Gallery Server</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: 4rem auto; padding: 0 1rem; }
+    a.button { display: inline-block; padding: .8rem 1.2rem; border: 1px solid #333;
+               border-radius: .4rem; text-decoration: none; }
+    #status { margin: 1rem 0; }
+  </style>
+</head>
+<body>
+  <h1>My Gallery Server</h1>
+  <p id="status">Loading current server address…</p>
+  <p><a id="open" class="button" href="#" hidden>OPEN SERVER</a></p>
+
+  <script>
+    // The updater writes this file in the same GitHub repository.
+    fetch("server-ip.json?cachebust=" + Date.now())
+      .then(function (r) {
+        if (!r.ok) throw new Error("Could not read server-ip.json");
+        return r.json();
+      })
+      .then(function (data) {
+        var url = data.url;
+        document.getElementById("status").textContent =
+          "Current public address: " + url;
+        var link = document.getElementById("open");
+        link.href = url;
+        link.hidden = false;
+      })
+      .catch(function () {
+        document.getElementById("status").textContent =
+          "The current server address is temporarily unavailable.";
+      });
+  </script>
+</body>
+</html>
